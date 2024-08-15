@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(service_template CXX)
+project(posts-uservice CXX)
 
 
 # Adding userver dependency
