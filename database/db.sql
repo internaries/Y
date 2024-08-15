@@ -1,11 +1,16 @@
 CREATE EXTENSION pgcrypto;
 
+CREATE TYPE s3_url AS ( 
+    bucket TEXT,
+    key TEXT
+);
+
 CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR(32) NOT NULL, 
     login VARCHAR(32) UNIQUE NOT NULL,
     password VARCHAR(32) NOT NULL,
-    avatar_id INT,
+    avatar_url S3_URL,
     description VARCHAR(280),
     created_at TIMESTAMP NOT NULL
 );
@@ -13,7 +18,7 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS posts (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID,
-    media_id INT,
+    media_url S3_URL,
     description VARCHAR(280),
     created_at TIMESTAMP NOT NULL,
     CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(id)
