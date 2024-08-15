@@ -1,31 +1,35 @@
 CREATE EXTENSION pgcrypto;
 
 CREATE TABLE IF NOT EXISTS users (
-    ID UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    NAME TEXT NOT NULL, -- probably CHARACTER VARYING(CONST) will be better than TEXT
-    LOGIN TEXT UNIQUE NOT NULL,
-    PASSWORD TEXT NOT NULL,
-    AVATAR_ID INT,
-    DESCRIPTION TEXT,
-    CREATED_AT TIMESTAMP NOT NULL
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name TEXT NOT NULL, -- probably CHARACTER VARYING(CONST) will be better than TEXT
+    login TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    avatar_id INT,
+    description TEXT,
+    created_at TIMESTAMP NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS posts (
-    ID UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    USER_ID INT,
-    MEDIA_ID INT,
-    DESCRIPTION TEXT,
-    CREATED_AT TIMESTAMP NOT NULL
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id INT,
+    media_id INT,
+    description TEXT,
+    created_at TIMESTAMP NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS likes (
-    ID SERIAL PRIMARY KEY,
-    USER_ID INT, -- WHO LIKED
-    POST_ID INT -- WHAT LIKED
+    user_id UUID, -- WHO LIKED
+    post_id UUID, -- WHAT LIKED
+    PRIMARY KEY (user_id, post_id),
+    CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(id),
+    CONSTRAINT fk_post FOREIGN KEY(post_id) REFERENCES posts(id)
 );
 
 CREATE TABLE IF NOT EXISTS follows (
-    ID SERIAL PRIMARY KEY,
-    FOLOWEE_ID INT, -- to whom
-    FOLOWER_OD INT -- who
+    folowee_id UUID, -- to whom 
+    folower_id UUID, -- who 
+    PRIMARY KEY (folowee_id, folower_id),
+    CONSTRAINT fk_folowee FOREIGN KEY(folowee_id) REFERENCES users(id),
+    CONSTRAINT fk_folower FOREIGN KEY(folower_id) REFERENCES users(id)
 );
