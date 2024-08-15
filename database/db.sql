@@ -15,7 +15,8 @@ CREATE TABLE IF NOT EXISTS posts (
     user_id UUID,
     media_id INT,
     description VARCHAR(280),
-    created_at TIMESTAMP NOT NULL
+    created_at TIMESTAMP NOT NULL,
+    CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(id)
 );
 
 CREATE TABLE IF NOT EXISTS likes (
