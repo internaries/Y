@@ -2,19 +2,19 @@ CREATE EXTENSION pgcrypto;
 
 CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    name TEXT NOT NULL, -- probably CHARACTER VARYING(CONST) will be better than TEXT
-    login TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL,
+    name VARCHAR(32) NOT NULL, 
+    login VARCHAR(32) UNIQUE NOT NULL,
+    password VARCHAR(32) NOT NULL,
     avatar_id INT,
-    description TEXT,
+    description VARCHAR(280),
     created_at TIMESTAMP NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS posts (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id INT,
+    user_id UUID,
     media_id INT,
-    description TEXT,
+    description VARCHAR(280),
     created_at TIMESTAMP NOT NULL
 );
 
