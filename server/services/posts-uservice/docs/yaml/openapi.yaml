@@ -32,6 +32,11 @@ components:
         text:
           type: string
           nullable: false
+        media:
+          type: string
+          format: binary
+          nullable: false
+          writeOnly: true
         mediaUrl:
           allOf:
             - $ref: '#/components/schemas/MediaUrl'
