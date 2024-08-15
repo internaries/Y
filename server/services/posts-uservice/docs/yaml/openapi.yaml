@@ -17,6 +17,9 @@ components:
       description: Момент времени в формате ISO 8601 в часовом поясе UTC+0.
       type: string
       pattern: '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,3})?Z'
+    MediaUrl:
+      description: Ссылка на изображение, прикрепленное к посту.
+      type: string
     Post:
       type: object
       nullable: false
@@ -29,6 +32,11 @@ components:
         text:
           type: string
           nullable: false
+        mediaUrl:
+          allOf:
+            - $ref: '#/components/schemas/MediaUrl'
+            - nullable: true
+            - readOnly: true
         authorId:
           allOf:
             - $ref: '#/components/schemas/UserId'
