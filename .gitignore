@@ -33,3 +33,16 @@
 
 # vscode
 .vscode
+
+# cache
+.ccache
+__pycache__
+
+# build
+server/services/*/build_debug/
+
+# mac os
+.DS_Store
+
+# third party
+server/services/*/third_party/*
