@@ -4,6 +4,12 @@
 
 #include <userver/server/handlers/http_handler_base.hpp>
 
+#include "userver/storages/secdist/exceptions.hpp"
+
+#include <userver/storages/postgres/cluster.hpp>
+#include <userver/storages/postgres/component.hpp>
+
+
 namespace service_template {
 
 namespace {
