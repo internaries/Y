@@ -47,6 +47,15 @@ components:
             - $ref: '#/components/schemas/UserId'
             - nullable: false
             - readOnly: true
+        authorName:
+          type: string
+          nullable: false
+          readOnly: true
+        authorAvatarUrl:
+          allOf:
+            - $ref: '#/components/schemas/MediaUrl'
+            - nullable: false
+            - readOnly: true
         createdAt:
           allOf:
             - $ref: '#/components/schemas/ISOTimestamp'
