@@ -12,16 +12,18 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(32) NOT NULL,
     avatar_url S3_URL,
     description VARCHAR(280),
-    created_at TIMESTAMP NOT NULL
+    created_at TIMESTAMP DEFAULT NOW() 
 );
 
 CREATE TABLE IF NOT EXISTS posts (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID,
+    author_id UUID,
+    author_name VARCHAR(32) NOT NULL, 
+    author_avatar_url S3_URL,
     media_url S3_URL,
     description VARCHAR(280),
-    created_at TIMESTAMP NOT NULL,
-    CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(id)
+    created_at TIMESTAMP DEFAULT NOW(),
+    CONSTRAINT fk_author FOREIGN KEY(author_id) REFERENCES users(id)
 );
 
 CREATE TABLE IF NOT EXISTS likes (
