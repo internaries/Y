@@ -54,10 +54,20 @@ components_manager:
             throttling_enabled: false
             url_trailing_slash: strict-match
 
-        handler-hello:                    # Finally! Our handler.
-            path: /hello                  # Registering handler by URL '/hello'.
-            method: GET,POST              # It will only reply to GET (HEAD) and POST requests.
-            task_processor: main-task-processor  # Run it on CPU bound task processor
+        handler-create-post:
+            path: /api/v1/posts
+            method: POST
+            task_processor: main-task-processor
+        
+        handler-get-post:
+            path: /api/v1/posts/{postId}
+            method: GET
+            task_processor: main-task-processor
+
+#        handler-last-posts:
+#            path: /api/v1/users/{userId}/posts
+#            method: GET
+#            task_processor: main-task-processor
 
         postgres-db-1:
             dbconnection: $dbconnection
