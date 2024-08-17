@@ -7,7 +7,8 @@
 #include <userver/testsuite/testsuite_support.hpp>
 #include <userver/utils/daemon_run.hpp>
 
-#include "hello.hpp"
+#include "api/v1/posts/create_post.hpp"
+#include "api/v1/posts/get_post.hpp"
 
 int main(int argc, char* argv[]) {
   auto component_list = userver::components::MinimalServerComponentList()
@@ -18,7 +19,8 @@ int main(int argc, char* argv[]) {
                             .Append<userver::clients::dns::Component>()
                             .Append<userver::server::handlers::TestsControl>();
 
-  service_template::AppendHello(component_list);
+  posts_uservice::AppendCreatePost(component_list);
+  posts_uservice::AppendGetPost(component_list);
 
   return userver::utils::DaemonMain(argc, argv, component_list);
 }

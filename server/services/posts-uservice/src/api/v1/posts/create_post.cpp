@@ -1,4 +1,4 @@
-#include "hello.hpp"
+#include "create_post.hpp"
 
 #include <fmt/format.h>
 #include <userver/components/component_context.hpp>
@@ -11,15 +11,15 @@
 #include <userver/storages/postgres/component.hpp>
 
 
-namespace service_template {
+namespace posts_uservice {
 
 namespace {
 
-class Hello final : public userver::server::handlers::HttpHandlerBase {
+class CreatePost final : public userver::server::handlers::HttpHandlerBase {
 public:
-  static constexpr std::string_view kName = "handler-hello";
+  static constexpr std::string_view kName = "handler-create-post";
 
-  Hello(const userver::components::ComponentConfig& config,
+  CreatePost(const userver::components::ComponentConfig& config,
            const userver::components::ComponentContext& context) : HttpHandlerBase(config,context),
             pg_cluster_(context.FindComponent<userver::components::Postgres>("postgres-db-1").GetCluster()) {
 
@@ -30,8 +30,7 @@ public:
   std::string HandleRequestThrow(
       const userver::server::http::HttpRequest &request,
       userver::server::request::RequestContext &) const override {
-
-    return service_template::SayHelloTo(request.GetArg("name"));
+    return "I created post";
   }
 private:
   userver::storages::postgres::ClusterPtr pg_cluster_;
@@ -39,16 +38,8 @@ private:
 
 } // namespace
 
-std::string SayHelloTo(std::string_view name) {
-  if (name.empty()) {
-    name = "unknown user";
-  }
-
-  return fmt::format("Hello, {}!\n", name);
-}
-
-void AppendHello(userver::components::ComponentList &component_list) {
-  component_list.Append<Hello>();
+void AppendCreatePost(userver::components::ComponentList &component_list) {
+  component_list.Append<CreatePost>();
 }
 
 } // namespace service_template
