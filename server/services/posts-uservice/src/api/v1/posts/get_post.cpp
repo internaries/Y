@@ -42,7 +42,7 @@ public:
     try {
       post_id = boost::lexical_cast<boost::uuids::uuid>(post_id_as_text);
     }
-    catch (std::bad_cast) {
+    catch (const std::bad_cast& ex) {
       auto& response = request.GetHttpResponse();
       response.SetStatus(userver::server::http::HttpStatus::kBadRequest);
       return "Bad Id";
