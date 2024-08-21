@@ -5,3 +5,5 @@ logger-level: debug
 is_testing: true
 
 server-port: 8080
+
+dbconnection: 'postgres://testing:test1234@c-c9qcknelu3l6ogasdef5.rw.mdb.yandexcloud.net:6432/y-testing'

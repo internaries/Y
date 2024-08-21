@@ -8,6 +8,7 @@
 #include <userver/components/component.hpp>
 
 #include <userver/engine/task/task_processor_fwd.hpp>
+#include <userver/storages/postgres/io/row_types.hpp>
 #include <userver/utils/async.hpp>
 #include <userver/components/minimal_server_component_list.hpp>
 #include <userver/utils/daemon_run.hpp>
@@ -29,11 +30,16 @@ namespace posts_uservice {
   }
 
   std::string FormatText(const std::string& input) {
-    std::string result;
+    std::string result = "";
     
     for(const auto& c : input) {
       if(isSymbol(c)) {
         result.push_back(c);
+        continue;
+      }
+
+      if(result.empty()) {
+        continue;
       }
 
       if(c == '\n' && result.back() == ' ') {
@@ -41,12 +47,12 @@ namespace posts_uservice {
         continue;
       }
 
-      if(!result.empty() && isSymbol(result.back())) {
+      if(isSymbol(result.back())) {
         result.push_back(c);
       }
     }
     
-    if (!isSymbol(result.back())) {
+    if (!result.empty() && !isSymbol(result.back())) {
       result.pop_back();
     }
 
@@ -90,6 +96,14 @@ public:
         // const auto& data = "data";
 
         // auto external_response =  http_client_.CreateRequest().put(url, data);
+
+        // auto getting_name = pg_cluster_->Execute(userver::storages::postgres::ClusterHostType::kMaster,
+        //   "SELECT name FROM users WHERE id = $1", userId);
+
+        // auto name = getting_name.AsSingleRow();
+
+        // auto result_create = pg_cluster_->Execute(userver::storages::postgres::ClusterHostType::kMaster,
+        //   "INSERT INTO posts (author_id, author_name, description) VALUES ();");
 
         return "I created post";
   }

@@ -6,4 +6,4 @@ is_testing: false
 
 server-port: 8080
 
-dbconnection: 'change me'
+dbconnection: 'postgres://testing:test1234@c-c9qcknelu3l6ogasdef5.rw.mdb.yandexcloud.net:6432/y-testing'

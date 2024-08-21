@@ -33,5 +33,4 @@ UTEST(CreatePost, FormatText) {
      "You spin me\nlike round, baby,\nlike round.\nLike *a !record baby\nround_round_round!");
     EXPECT_EQ(FormatText("1\n   \n \n 23\n45    67 ))\n!@#    \n$%^    ^&*() +-+\n~/\n\n"),
      "1\n23\n45 67 ))\n!@#\n$%^ ^&*() +-+\n~/");
-
 }
