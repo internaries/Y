@@ -11,6 +11,7 @@ services:
           - CORES_DIR=/cores
         volumes:
           - .:/service_template:rw
+          - ../../databases:/databases
         ports:
           - 8080:8080
         working_dir: /service_template
