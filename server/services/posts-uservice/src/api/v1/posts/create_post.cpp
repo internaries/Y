@@ -10,36 +10,31 @@
 #include <userver/storages/postgres/cluster.hpp>
 #include <userver/storages/postgres/component.hpp>
 
-
 namespace posts_uservice {
 
 namespace {
 
 class CreatePost final : public userver::server::handlers::HttpHandlerBase {
-public:
+ public:
   static constexpr std::string_view kName = "handler-create-post";
 
-  CreatePost(const userver::components::ComponentConfig& config,
-           const userver::components::ComponentContext& context) : HttpHandlerBase(config,context),
-            pg_cluster_(context.FindComponent<userver::components::Postgres>("postgres-db-1").GetCluster()) {
-
-  }
+  CreatePost(const userver::components::ComponentConfig& config, const userver::components::ComponentContext& context)
+      : HttpHandlerBase(config, context),
+        pg_cluster_(context.FindComponent<userver::components::Postgres>("postgres-db-1").GetCluster()) {}
 
   using HttpHandlerBase::HttpHandlerBase;
 
-  std::string HandleRequestThrow(
-      const userver::server::http::HttpRequest &request,
-      userver::server::request::RequestContext &) const override {
+  std::string HandleRequestThrow(const userver::server::http::HttpRequest& request,
+                                 userver::server::request::RequestContext&) const override {
     return "I created post";
   }
-private:
+
+ private:
   userver::storages::postgres::ClusterPtr pg_cluster_;
 };
 
-} // namespace
+}  // namespace
 
-void AppendCreatePost(userver::components::ComponentList &component_list) {
-  component_list.Append<CreatePost>();
-}
+void AppendCreatePost(userver::components::ComponentList& component_list) { component_list.Append<CreatePost>(); }
 
-} // namespace service_template
+}  // namespace posts_uservice
