@@ -178,6 +178,13 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/UserId'
+        - in: header
+          name: System-Design-User-Id
+          required: true
+          description: >
+            Идентификатор ползователя, который аутентифицирован в данном запросе.
+          schema:
+            $ref: '#/components/schemas/UserId'
       responses:
         200:
           description: Подписка прошла успешно
@@ -188,6 +195,14 @@ paths:
       summary: Получение пользователей, на которых была произведена подписка
       description: >
         Получение списка идентификаторов пользователей, на которых была произведена подписка
+      parameters:
+        - in: header
+          name: System-Design-User-Id
+          required: true
+          description: >
+            Идентификатор ползователя, который аутентифицирован в данном запросе.
+          schema:
+            $ref: '#/components/schemas/UserId'
       responses:
         200:
           description: Массив идентификаторов пользователей
@@ -209,6 +224,14 @@ paths:
       summary: Получение пользователей, которые подписались на текущего пользователя
       description: >
         Получение списка идентификаторов пользователей, которые подписались на текущего пользователя
+      parameters:
+        - in: header
+          name: System-Design-User-Id
+          required: true
+          description: >
+            Идентификатор ползователя, который аутентифицирован в данном запросе.
+          schema:
+            $ref: '#/components/schemas/UserId'
       responses:
         200:
           description: Массив идентификаторов пользователей
@@ -236,6 +259,13 @@ paths:
         Для получения следующей странцы, необходимо в параметр `page` передать токен следующей страницы,
         полученный в теле ответа с предыдущей страницей.
       parameters:
+        - in: header
+          name: System-Design-User-Id
+          required: true
+          description: >
+            Идентификатор ползователя, который аутентифицирован в данном запросе.
+          schema:
+            $ref: '#/components/schemas/UserId'
         - in: query
           name: page
           description: Токен страницы
