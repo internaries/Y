@@ -2,6 +2,9 @@
 
 #include <fmt/format.h>
 #include <cstddef>
+#include <optional>
+#include <string>
+#include <tuple>
 #include <userver/clients/http/client.hpp>
 #include <userver/clients/http/config.hpp>
 #include <userver/components/component_context.hpp>
@@ -17,11 +20,16 @@
 #include <userver/clients/dns/component.hpp>
 #include <userver/clients/http/component.hpp>
 
+#include "models/post.hpp"
+#include "models/s3_url.hpp"
 #include "userver/storages/secdist/exceptions.hpp"
 
 #include <userver/server/http/http_request.hpp>
 #include <userver/storages/postgres/cluster.hpp>
 #include <userver/storages/postgres/component.hpp>
+
+#include "utils/errors.hpp"
+#include "utils/fields.hpp"
 
 namespace posts_uservice {
 
@@ -62,7 +70,7 @@ namespace posts_uservice {
 namespace {
 
 class CreatePost final : public userver::server::handlers::HttpHandlerBase {
-public:
+ public:
   static constexpr std::string_view kName = "handler-create-post";
 
   CreatePost(const userver::components::ComponentConfig& config,
@@ -77,16 +85,21 @@ public:
       const userver::server::http::HttpRequest &request,
       userver::server::request::RequestContext &) const override {
 
-        const auto& userId = request.GetHeader("System-Design-User-Id ");
+        const auto& user_id_argmunet = request.GetHeader("System-Design-User-Id");
+        //should throw 401
+        auto author_id = utils::ParseUUIDArgument(user_id_argmunet);
 
-        const auto& description = FormatText(request.GetArg("text"));
+        const auto& description = FormatText(request.GetArg("description"));
         const auto& media = request.GetArg("media");
 
         // here u need create field in json with error 
         if(description.length() > 280) {
-          auto& response = request.GetHttpResponse();
-          response.SetStatus(userver::server::http::HttpStatus::kBadRequest);
-          return {};
+          throw errors::ValidationException("text", "Text is too big, max length is 280");
+        }
+
+        //while we can't add media
+        if(description.empty()) {
+          throw errors::ValidationException("text", "Is no any text");
         }
 
         //if media isn't image u need send bad request
@@ -97,25 +110,38 @@ public:
 
         // auto external_response =  http_client_.CreateRequest().put(url, data);
 
-        // auto getting_name = pg_cluster_->Execute(userver::storages::postgres::ClusterHostType::kMaster,
-        //   "SELECT name FROM users WHERE id = $1", userId);
+        auto getting_user = pg_cluster_->Execute(userver::storages::postgres::ClusterHostType::kMaster,
+          "SELECT name, avatar_url FROM users WHERE id = $1", author_id);
 
-        // auto name = getting_name.AsSingleRow();
+        // throw errors::ValidationException("text", "log");
 
-        // auto result_create = pg_cluster_->Execute(userver::storages::postgres::ClusterHostType::kMaster,
-        //   "INSERT INTO posts (author_id, author_name, description) VALUES ();");
+        auto[author_name, author_avatar_url] = 
+          getting_user.AsSingleRow<std::tuple<std::string, models::S3Url>>(userver::storages::postgres::kRowTag);
 
-        return "I created post";
+        auto result_create = pg_cluster_->Execute(userver::storages::postgres::ClusterHostType::kMaster,
+          "INSERT INTO posts (author_id, author_name, author_avatar_url, description) VALUES ($1, $2, $3, $4) "
+                "RETURNING id, created_at;",
+           author_id, author_name, author_avatar_url, description);
+          
+        auto[post_id, created_at] = 
+          result_create.AsSingleRow<std::tuple<boost::uuids::uuid, std::chrono::system_clock::time_point>>(userver::storages::postgres::kRowTag);
+
+        models::PostResponse pr{post_id, description, std::nullopt, author_id, author_name, author_avatar_url, created_at};
+
+        userver::formats::json::ValueBuilder builder(pr);
+
+        auto& response = request.GetHttpResponse();
+        response.SetStatus(userver::server::http::HttpStatus::kOk);
+        return ToPrettyString(builder.ExtractValue());
   }
-private:
+
+ private:
   userver::storages::postgres::ClusterPtr pg_cluster_;
   userver::clients::http::Client& http_client_;
 };
 
-} // namespace
+}  // namespace
 
-void AppendCreatePost(userver::components::ComponentList &component_list) {
-  component_list.Append<CreatePost>();
-}
+void AppendCreatePost(userver::components::ComponentList& component_list) { component_list.Append<CreatePost>(); }
 
-} // namespace service_template
+}  // namespace posts_uservice

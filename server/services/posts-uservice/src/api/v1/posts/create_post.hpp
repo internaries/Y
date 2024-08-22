@@ -11,4 +11,4 @@ std::string FormatText(const std::string& input);
 
 void AppendGetPost(userver::components::ComponentList &component_list);
 
-} // namespace service_template
+}  // namespace posts_uservice

@@ -64,10 +64,10 @@ components_manager:
             method: GET
             task_processor: main-task-processor
 
-#        handler-last-posts:
-#            path: /api/v1/users/{userId}/posts
-#            method: GET
-#            task_processor: main-task-processor
+        handler-last-posts:
+            path: /api/v1/users/{userId}/posts
+            method: GET
+            task_processor: main-task-processor
 
         postgres-db-1:
             dbconnection: $dbconnection

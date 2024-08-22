@@ -27,11 +27,22 @@ userver_setup_environment()
 
 # Common sources
 add_library(${PROJECT_NAME}_objs OBJECT
-    src/api/v1/posts/create_post.cpp
     src/api/v1/posts/create_post.hpp
+    src/api/v1/posts/create_post.cpp
     src/api/v1/posts/get_post.hpp
     src/api/v1/posts/get_post.cpp
+    src/api/v1/users/posts/last_posts.hpp
+    src/api/v1/users/posts/last_posts.cpp
+    src/models/s3_url.hpp
+    src/models/s3_url.cpp
+    src/models/post.hpp
+    src/models/post.cpp
+    src/utils/fields.hpp
+    src/utils/fields.cpp
 )
+include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+
 target_link_libraries(${PROJECT_NAME}_objs PUBLIC userver::core userver::postgresql)
 
 # The Service
@@ -42,6 +53,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_objs)
 # Unit Tests
 add_executable(${PROJECT_NAME}_unittest
     src/api/v1/posts/create_post_test.cpp
+    src/models/s3_url_test.cpp
 )
 target_link_libraries(${PROJECT_NAME}_unittest PRIVATE ${PROJECT_NAME}_objs userver::utest)
 add_google_tests(${PROJECT_NAME}_unittest)

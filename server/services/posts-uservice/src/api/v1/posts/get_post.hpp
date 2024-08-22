@@ -7,6 +7,6 @@
 
 namespace posts_uservice {
 
-void AppendCreatePost(userver::components::ComponentList &component_list);
+void AppendCreatePost(userver::components::ComponentList& component_list);
 
-} // namespace service_template
+}  // namespace posts_uservice
