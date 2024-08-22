@@ -164,3 +164,114 @@ paths:
                           Поле отсутствует, если текущая страница содержит самый ранний пост пользователя.
         400:
           description: Некорректный запрос, например, из-за некорректного токена страницы.
+  '/api/v1/users/{userId}/subscribe':
+    post:
+      summary: Подписка на пользователя
+      description: >
+        Текущий авторизированный пользователь подписывается на указанного пользователя
+
+        Повторная подписка на пользователя считается успешым запросом. Однако мы не должны видеть его в подписчиках два раза.
+        Подписка на самого себя - это ошибочный запрос, должен вернуться 400.
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            $ref: '#/components/schemas/UserId'
+      responses:
+        200:
+          description: Подписка прошла успешно
+        400:
+          description: Некорректный запрос
+  '/api/v1/subscriptions':
+    get:
+      summary: Получение пользователей, на которых была произведена подписка
+      description: >
+        Получение списка идентификаторов пользователей, на которых была произведена подписка
+      responses:
+        200:
+          description: Массив идентификаторов пользователей
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    description: >
+                      Массив строк, содержащих идентификаторы пользователей. Порядок не важен.
+                    items:
+                      type: string
+        400:
+          description: Некорректный запрос
+  '/api/v1/subscribers':
+    get:
+      summary: Получение пользователей, которые подписались на текущего пользователя
+      description: >
+        Получение списка идентификаторов пользователей, которые подписались на текущего пользователя
+      responses:
+        200:
+          description: Массив идентификаторов пользователей
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    description: >
+                      Массив строк, содержащих идентификаторы пользователей. Порядок не важен.
+                    items:
+                      type: string
+        400:
+          description: Некорректный запрос
+  '/api/v1/feed':
+    get:
+      summary: Получение ленты постов для авторизированного пользователя
+      description: >
+        Лента пользователя - это набор постов пользователей, на которых он подписан, упорядоченный по времени.
+
+        Для получения первой страницы (с самыми последними постами), необходимо выполнить запрос
+        без параметра `page`.
+        Для получения следующей странцы, необходимо в параметр `page` передать токен следующей страницы,
+        полученный в теле ответа с предыдущей страницей.
+      parameters:
+        - in: query
+          name: page
+          description: Токен страницы
+          required: false
+          schema:
+            $ref: '#/components/schemas/PageToken'
+        - in: query
+          name: size
+          description: Количество постов на странице
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+      responses:
+        200:
+          description: Страница с постам из ленты
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  posts:
+                    type: array
+                    description: >
+                      Посты в обратном хронологическом порядке.
+                      Отсутствие данного поля эквивалентно пустому массиву.
+                    items:
+                      $ref: '#/components/schemas/Post'
+                  nextPage:
+                    allOf:
+                      - $ref: '#/components/schemas/PageToken'
+                      - nullable: false
+                      - description: >
+                          Токен следующей страницы при её наличии.
+                          Поле отсутствует, если текущая страница содержит самый ранний пост пользователя.
+        400:
+          description: Некорректный запрос
