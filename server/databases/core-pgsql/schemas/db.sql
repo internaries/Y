@@ -1,9 +1,14 @@
-CREATE EXTENSION pgcrypto;
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
-CREATE TYPE s3_url AS ( 
-    bucket TEXT,
-    key TEXT
-);
+DO $$ BEGIN
+    CREATE TYPE s3_url AS ( 
+        bucket TEXT,
+        key TEXT
+    );
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+
 
 CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -41,3 +46,5 @@ CREATE TABLE IF NOT EXISTS follows (
     CONSTRAINT fk_folowee FOREIGN KEY(folowee_id) REFERENCES users(id),
     CONSTRAINT fk_folower FOREIGN KEY(folower_id) REFERENCES users(id)
 );
+
+CREATE INDEX IF NOT EXISTS idx_created_at ON posts USING btree (created_at DESC);
