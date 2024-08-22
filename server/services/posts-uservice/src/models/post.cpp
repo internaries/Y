@@ -2,6 +2,7 @@
 
 #include <boost/uuid/uuid_io.hpp>
 #include <userver/formats/json/value_builder.hpp>
+#include <userver/utils/datetime.hpp>
 
 namespace posts_uservice::models {
 

@@ -37,11 +37,11 @@ int ParseSizeArgument(const std::string& size_argument) {
     if (pos != size_argument.size()) {
       throw std::invalid_argument("");
     }
-    if (result < 0 || result > 100) {
+    if (result < 1 || result > 100) {
       throw std::out_of_range("");
     }
   } catch (const std::out_of_range&) {
-    throw errors::ValidationException("size", "Size of page is limited in range from 10 to 100");
+    throw errors::ValidationException("size", "Size of page is limited in range from 1 to 100");
   } catch (const std::invalid_argument&) {
     throw errors::ValidationException("size", "Int is expected");
   }
@@ -50,7 +50,8 @@ int ParseSizeArgument(const std::string& size_argument) {
 
 std::chrono::system_clock::time_point ParsePageArgument(const std::string& page_argument) {
   try {
-    return userver::utils::datetime::Stringtime(page_argument);
+    return userver::utils::datetime::Stringtime(page_argument, userver::utils::datetime::kDefaultTimezone,
+                                                userver::utils::datetime::kRfc3339Format);
   } catch (const userver::utils::datetime::DateParseError&) {
     throw errors::ValidationException("page", "Page token is not valid");
   }
@@ -106,7 +107,9 @@ class LastPosts final : public userver::server::handlers::HttpHandlerBase {
 
     userver::formats::json::ValueBuilder response;
     response["posts"] = posts;
-    response["nextPage"] = (*(posts.end() - 1)).created_at;
+    if (!posts.IsEmpty()) {
+      response["nextPage"] = response["posts"][posts.Size() - 1]["createdAt"];
+    }
 
     return userver::formats::json::ToPrettyString(response.ExtractValue());
   }

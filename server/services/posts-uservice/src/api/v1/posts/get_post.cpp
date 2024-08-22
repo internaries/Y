@@ -10,6 +10,7 @@
 #include <userver/server/handlers/http_handler_base.hpp>
 
 #include "userver/storages/secdist/exceptions.hpp"
+#include "utils/errors.hpp"
 #include "utils/fields.hpp"
 
 #include <userver/storages/postgres/cluster.hpp>
@@ -41,9 +42,7 @@ class GetPost final : public userver::server::handlers::HttpHandlerBase {
                                     "author_avatar_url, created_at from posts WHERE id = $1",
                                     post_id);
     if (res.IsEmpty()) {
-      auto& response = request.GetHttpResponse();
-      response.SetStatus(userver::server::http::HttpStatus::kNotFound);
-      return "Id does not exist";
+      throw errors::NotFoundException("user", "User with this id not found");
     }
     auto parsed = res.AsSingleRow<models::PostResponse>(userver::storages::postgres::kRowTag);
 

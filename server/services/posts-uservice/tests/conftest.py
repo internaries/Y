@@ -1,10 +1,12 @@
 import pathlib
 
 import pytest
- 
+
 from testsuite.databases.pgsql import discover
 
-pytest_plugins = ['pytest_userver.plugins.core', 'pytest_userver.plugins.postgresql']
+pytest_plugins = ['pytest_userver.plugins.core',
+                  'pytest_userver.plugins.postgresql']
+
 
 @pytest.fixture(scope='session')
 def service_source_dir():
@@ -18,6 +20,7 @@ def initial_data_path(service_source_dir):
     return [
         service_source_dir / '../../databases/core-pgsql/data',
     ]
+
 
 @pytest.fixture(scope='session')
 def pgsql_local(service_source_dir, pgsql_local_create):
