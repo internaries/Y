@@ -31,6 +31,21 @@ CREATE TABLE IF NOT EXISTS posts (
     CONSTRAINT fk_author FOREIGN KEY(author_id) REFERENCES users(id)
 );
 
+
+CREATE TABLE IF NOT EXISTS feed (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    owner_id UUID,
+    author_id UUID,
+    author_name VARCHAR(32) NOT NULL, 
+    author_avatar_url S3_URL,
+    media_url S3_URL,
+    description VARCHAR(280),
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    CONSTRAINT fk_author FOREIGN KEY(author_id) REFERENCES users(id),
+    CONSTRAINT fk_owner FOREIGN KEY(owner_id) REFERENCES users(id),
+    CONSTRAINT fk_post FOREIGN KEY(id) REFERENCES posts(id)
+);
+
 CREATE TABLE IF NOT EXISTS likes (
     user_id UUID, -- WHO LIKED
     post_id UUID, -- WHAT LIKED
@@ -47,4 +62,5 @@ CREATE TABLE IF NOT EXISTS follows (
     CONSTRAINT fk_folower FOREIGN KEY(folower_id) REFERENCES users(id)
 );
 
-CREATE INDEX IF NOT EXISTS idx_created_at ON posts USING btree (created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_posts_created_at ON posts USING btree (created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_feed_created_at ON feed USING btree (created_at DESC);
