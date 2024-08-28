@@ -3,8 +3,8 @@
 #include <fmt/format.h>
 #include <userver/components/component_context.hpp>
 
-#include <userver/server/handlers/http_handler_base.hpp>
 #include <userver/formats/serialize/common_containers.hpp>
+#include <userver/server/handlers/http_handler_base.hpp>
 
 #include "models/pagination.hpp"
 #include "models/post.hpp"
@@ -35,7 +35,7 @@ class GetFeed final : public userver::server::handlers::HttpHandlerBase {
 
     models::PaginationRequest pagination_request(user_id_argument, size_argument, page_argument);
     auto res = pagination_request.GetPostsFromDb(pg_cluster_, "feed", "owner_id");
-    
+
     auto posts = res.AsSetOf<models::PostResponse>(userver::storages::postgres::kRowTag);
 
     userver::formats::json::ValueBuilder response;
