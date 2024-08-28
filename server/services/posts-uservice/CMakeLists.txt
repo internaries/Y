@@ -39,6 +39,8 @@ add_library(${PROJECT_NAME}_objs OBJECT
     src/models/s3_url.cpp
     src/models/post.hpp
     src/models/post.cpp
+    src/models/pagination.hpp
+    src/models/pagination.cpp
     src/utils/fields.hpp
     src/utils/fields.cpp
 )

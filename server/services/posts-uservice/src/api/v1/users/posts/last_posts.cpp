@@ -12,6 +12,7 @@
 #include <userver/formats/serialize/common_containers.hpp>
 #include <userver/server/handlers/http_handler_base.hpp>
 
+#include "models/pagination.hpp"
 #include "models/post.hpp"
 #include "userver/storages/secdist/exceptions.hpp"
 #include "utils/errors.hpp"
@@ -28,28 +29,6 @@ namespace posts_uservice {
 namespace {
 
 class LastPosts final : public userver::server::handlers::HttpHandlerBase {
-  userver::storages::postgres::ResultSet GetPostsFromDb(const std::string& page_argument,
-                                                        const boost::uuids::uuid& user_id, int size) const {
-    if (page_argument.empty()) {
-      return pg_cluster_->Execute(userver::storages::postgres::ClusterHostType::kMaster,
-                                  fmt::format("SELECT {} from posts WHERE author_id = $1 "
-                                              "ORDER BY created_at DESC "
-                                              "LIMIT $2 ",
-                                              models::kPostResponseFields),
-                                  user_id, size);
-
-    } else {
-      std::chrono::system_clock::time_point page = utils::ParsePaginationArgument(page_argument);
-      return pg_cluster_->Execute(userver::storages::postgres::ClusterHostType::kMaster,
-                                  fmt::format("SELECT {} from posts WHERE author_id = $1 "
-                                              "AND created_at < $3 "
-                                              "ORDER BY created_at DESC "
-                                              "LIMIT $2 ",
-                                              models::kPostResponseFields),
-                                  user_id, size, page);
-    }
-  }
-
  public:
   static constexpr std::string_view kName = "handler-last-posts";
 
@@ -62,15 +41,11 @@ class LastPosts final : public userver::server::handlers::HttpHandlerBase {
   std::string HandleRequestThrow(const userver::server::http::HttpRequest& request,
                                  userver::server::request::RequestContext&) const override {
     const std::string& user_id_argument = request.GetPathArg("userId");
-    boost::uuids::uuid user_id = utils::ParseUUIDArgument(user_id_argument);
-
+    const std::string& size_argument = request.GetArg("size");
     const std::string& page_argument = request.GetArg("page");
 
-    const std::string& size_argument = request.GetArg("size");
-    int size = utils::ParsePaginationSizeArgument(size_argument);
-
-    auto res = GetPostsFromDb(page_argument, user_id, size);
-
+    models::PaginationRequest pagination_request(user_id_argument, size_argument, page_argument);
+    auto res = pagination_request.GetPostsFromDb(pg_cluster_, "posts", "author_id");
     auto posts = res.AsSetOf<models::PostResponse>(userver::storages::postgres::kRowTag);
 
     userver::formats::json::ValueBuilder response;
@@ -78,7 +53,6 @@ class LastPosts final : public userver::server::handlers::HttpHandlerBase {
     if (!posts.IsEmpty()) {
       response["nextPage"] = response["posts"][posts.Size() - 1]["createdAt"];
     }
-
     return userver::formats::json::ToPrettyString(response.ExtractValue());
   }
 

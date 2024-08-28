@@ -4,7 +4,10 @@
 #include <userver/components/component_context.hpp>
 
 #include <userver/server/handlers/http_handler_base.hpp>
+#include <userver/formats/serialize/common_containers.hpp>
 
+#include "models/pagination.hpp"
+#include "models/post.hpp"
 #include "userver/storages/secdist/exceptions.hpp"
 
 #include <userver/storages/postgres/cluster.hpp>
@@ -26,7 +29,21 @@ class GetFeed final : public userver::server::handlers::HttpHandlerBase {
 
   std::string HandleRequestThrow(const userver::server::http::HttpRequest& request,
                                  userver::server::request::RequestContext&) const override {
-    return "I getted feed";
+    const std::string& user_id_argument = request.GetHeader("System-Design-User-Id");
+    const std::string& size_argument = request.GetArg("size");
+    const std::string& page_argument = request.GetArg("page");
+
+    models::PaginationRequest pagination_request(user_id_argument, size_argument, page_argument);
+    auto res = pagination_request.GetPostsFromDb(pg_cluster_, "feed", "owner_id");
+    
+    auto posts = res.AsSetOf<models::PostResponse>(userver::storages::postgres::kRowTag);
+
+    userver::formats::json::ValueBuilder response;
+    response["posts"] = posts;
+    if (!posts.IsEmpty()) {
+      response["nextPage"] = response["posts"][posts.Size() - 1]["createdAt"];
+    }
+    return userver::formats::json::ToPrettyString(response.ExtractValue());
   }
 
  private:

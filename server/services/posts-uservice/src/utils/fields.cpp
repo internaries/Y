@@ -1,4 +1,6 @@
 #include "fields.hpp"
+#include <optional>
+#include "consts.hpp"
 #include "utils/errors.hpp"
 
 namespace posts_uservice::utils {
@@ -10,7 +12,10 @@ boost::uuids::uuid ParseUUIDArgument(const std::string& uuid_argument, const std
   }
 }
 
-std::chrono::system_clock::time_point ParsePaginationArgument(const std::string& page_argument) {
+std::optional<std::chrono::system_clock::time_point> ParsePaginationArgument(const std::string& page_argument) {
+  if (page_argument.empty()) {
+    return std::nullopt;
+  }
   try {
     return userver::utils::datetime::Stringtime(page_argument, userver::utils::datetime::kDefaultTimezone,
                                                 userver::utils::datetime::kRfc3339Format);
