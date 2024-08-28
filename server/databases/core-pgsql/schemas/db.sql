@@ -42,8 +42,9 @@ CREATE TABLE IF NOT EXISTS feed (
     description VARCHAR(280),
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     CONSTRAINT fk_author FOREIGN KEY(author_id) REFERENCES users(id),
-    CONSTRAINT fk_owner FOREIGN KEY(owner_id) REFERENCES users(id),
-    CONSTRAINT fk_post FOREIGN KEY(id) REFERENCES posts(id)
+    CONSTRAINT fk_owner FOREIGN KEY(owner_id) REFERENCES users(id)
+    -- Could be problematic at speed, don't really need it
+    -- CONSTRAINT fk_post FOREIGN KEY(id) REFERENCES posts(id)
 );
 
 CREATE TABLE IF NOT EXISTS likes (
