@@ -15,7 +15,7 @@ def validate_posts(posts, excpectedName, expectedSize=10, expected_count=0):
     count = expected_count
 
     for post in posts:
-        newCount = int(posts[0]['text'])
+        newCount = int(posts[0]['description'])
 
         assert newCount - 1 == count
         assert post['authorName'] == excpectedName
@@ -58,7 +58,7 @@ async def test_pagination(service_client):
 
     validate_posts(posts, 'user1', 3)
 
-    lastCount = int(posts[len(posts) - 1]['text'])
+    lastCount = int(posts[len(posts) - 1]['description'])
 
     print(data['nextPage'])
     response = await get_last_posts(service_client, 'c25a7e41-8a27-48ca-bbaf-dc27a000b9ba', 3, data['nextPage'])

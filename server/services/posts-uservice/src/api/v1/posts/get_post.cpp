@@ -41,7 +41,7 @@ class GetPost final : public userver::server::handlers::HttpHandlerBase {
                                     "SELECT id ,description, media_url, author_id, author_name, "
                                     "author_avatar_url, created_at from posts WHERE id = $1",
                                     post_id);
-    //change to throw
+    // change to throw
     if (res.IsEmpty()) {
       throw errors::NotFoundException("user", "User with this id not found");
     }
