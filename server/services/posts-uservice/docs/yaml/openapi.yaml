@@ -200,7 +200,7 @@ paths:
         Получение списка идентификаторов пользователей, на которых была произведена подписка
       parameters:
         - in: header
-          name: System-Design-User-PId
+          name: System-Design-User-Id
           required: true
           description: >
             Идентификатор ползователя, который аутентифицирован в данном запросе.
