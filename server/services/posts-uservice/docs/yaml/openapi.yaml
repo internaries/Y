@@ -29,7 +29,7 @@ components:
             - $ref: '#/components/schemas/PostId'
             - nullable: false
             - readOnly: true
-        text:
+        description:
           type: string
           nullable: false
         media:
@@ -73,7 +73,7 @@ paths:
           name: System-Design-User-Id
           required: true
           description: >
-            Идентификатор ползователя, который аутентифицирован в данном запросе.
+            Идентификатор пользователя, который аутентифицирован в данном запросе.
           schema:
             $ref: '#/components/schemas/UserId'
       requestBody:
