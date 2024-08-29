@@ -7,20 +7,20 @@ from testsuite.databases import pgsql
 from utils.error_strings import *
 
 
-async def test_badId(service_client):
+async def test_bad_id(service_client):
     response = await service_client.get('/api/v1/posts/123')
     assert response.status == 400
     assert VALIDATION_ERROR_START in response.text
 
 
-async def test_absenceId(service_client):
+async def test_absence_id(service_client):
     response = await service_client.get('/api/v1/posts/dd1870ab-fb0d-4b79-a890-ce62a091b77b')
     assert response.status == 404
     assert NOT_FOUND_ERROR_START in response.text
 
 
 @pytest.mark.pgsql('db', files=['testGetPost.sql'])
-async def test_goodData(service_client):
+async def test_good_data(service_client):
     response = await service_client.get('/api/v1/posts/749e5dc8-4c3b-4158-95c1-dc2ff9aab17b')
 
     expected_data = {
