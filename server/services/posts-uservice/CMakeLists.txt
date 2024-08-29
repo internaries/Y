@@ -35,6 +35,10 @@ add_library(${PROJECT_NAME}_objs OBJECT
     src/api/v1/users/posts/last_posts.cpp
     src/api/v1/feed/feed.hpp
     src/api/v1/feed/feed.cpp
+    src/api/v1/subscribers/subscribers.hpp
+    src/api/v1/subscribers/subscribers.cpp
+    src/api/v1/subscriptions/subscriptions.hpp
+    src/api/v1/subscriptions/subscriptions.cpp
     src/models/s3_url.hpp
     src/models/s3_url.cpp
     src/models/post.hpp
