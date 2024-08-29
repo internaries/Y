@@ -26,5 +26,4 @@ struct PostResponse {
 
 userver::formats::json::Value Serialize(const PostResponse& data,
                                         userver::formats::serialize::To<userver::formats::json::Value>);
-
 }  // namespace posts_uservice::models

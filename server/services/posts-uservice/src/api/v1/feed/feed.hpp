@@ -1,7 +1,5 @@
 #pragma once
 
-#include <chrono>
-#include <stdexcept>
 #include <string>
 #include <string_view>
 
@@ -9,6 +7,6 @@
 
 namespace posts_uservice {
 
-void AppendLastPosts(userver::components::ComponentList& component_list);
+void AppendGetFeed(userver::components::ComponentList& component_list);
 
 }  // namespace posts_uservice

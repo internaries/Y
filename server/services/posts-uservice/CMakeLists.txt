@@ -33,10 +33,14 @@ add_library(${PROJECT_NAME}_objs OBJECT
     src/api/v1/posts/get_post.cpp
     src/api/v1/users/posts/last_posts.hpp
     src/api/v1/users/posts/last_posts.cpp
+    src/api/v1/feed/feed.hpp
+    src/api/v1/feed/feed.cpp
     src/models/s3_url.hpp
     src/models/s3_url.cpp
     src/models/post.hpp
     src/models/post.cpp
+    src/models/pagination.hpp
+    src/models/pagination.cpp
     src/utils/fields.hpp
     src/utils/fields.cpp
 )

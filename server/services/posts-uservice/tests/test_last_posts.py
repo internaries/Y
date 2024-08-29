@@ -31,6 +31,15 @@ async def test_default(service_client):
 
 
 @pytest.mark.pgsql('db', files=['testLastPosts.sql'])
+async def test_empty(service_client):
+    response = await get_last_posts(service_client, '8248360f-6698-4f5e-bd11-96a3ac39a870')
+    assert response.status == 200
+
+    data = response.json()
+    validate_posts(data['posts'], 'user1', 0)
+
+
+@pytest.mark.pgsql('db', files=['testLastPosts.sql'])
 async def test_different_size(service_client):
     response = await get_last_posts(service_client, 'c25a7e41-8a27-48ca-bbaf-dc27a000b9ba', 5)
     assert response.status == 200

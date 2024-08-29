@@ -7,6 +7,7 @@
 #include <userver/testsuite/testsuite_support.hpp>
 #include <userver/utils/daemon_run.hpp>
 
+#include "api/v1/feed/feed.hpp"
 #include "api/v1/posts/create_post.hpp"
 #include "api/v1/posts/get_post.hpp"
 #include "api/v1/users/posts/last_posts.hpp"
@@ -23,6 +24,7 @@ int main(int argc, char* argv[]) {
   posts_uservice::AppendCreatePost(component_list);
   posts_uservice::AppendGetPost(component_list);
   posts_uservice::AppendLastPosts(component_list);
+  posts_uservice::AppendGetFeed(component_list);
 
   return userver::utils::DaemonMain(argc, argv, component_list);
 }
