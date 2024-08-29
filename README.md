@@ -8,7 +8,7 @@ Written on C++ using [userver](https://userver.tech/) framework, postgresql, red
 # Authors
 * [Dmitry Deruzhinsky](https://github.com/terebellum) 
 * [Sergey Vinogradov](https://github.com/St1lk3r)
-* [@timuur](https://github.com/tiimuur)
+* [Akhvlediani Timur](https://github.com/tiimuur)
 
 # Roadmap
 Here are some of the major upcoming features. You can view the complete roadmap with todos [here](https://github.com/orgs/internaries/projects/1). 
