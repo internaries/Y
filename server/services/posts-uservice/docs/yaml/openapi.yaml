@@ -29,7 +29,7 @@ components:
             - $ref: '#/components/schemas/PostId'
             - nullable: false
             - readOnly: true
-        text:
+        description:
           type: string
           nullable: false
         media:
@@ -73,7 +73,7 @@ paths:
           name: System-Design-User-Id
           required: true
           description: >
-            Идентификатор ползователя, который аутентифицирован в данном запросе.
+            Идентификатор пользователя, который аутентифицирован в данном запросе.
           schema:
             $ref: '#/components/schemas/UserId'
       requestBody:
@@ -88,6 +88,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Post'
+        400:
+          description: >
+            Некорректный запрос (текст больше 280 символов, или прикреплено не изображение, или другое)
         401:
           description: >
             Токен пользователя отсутствует в запросе, или передан в неверном формате.

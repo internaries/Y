@@ -7,6 +7,8 @@
 
 namespace posts_uservice {
 
-void AppendGetPost(userver::components::ComponentList& component_list);
+std::string FormatText(const std::string& input);
+
+void AppendGetPost(userver::components::ComponentList &component_list);
 
 }  // namespace posts_uservice

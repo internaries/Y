@@ -11,7 +11,7 @@ userver::formats::json::Value Serialize(const PostResponse& data,
   userver::formats::json::ValueBuilder builder;
 
   builder["id"] = boost::uuids::to_string(data.id);
-  builder["text"] = data.description.value();
+  builder["description"] = data.description.value();
   builder["mediaUrl"] = (data.media_url.has_value() ? data.media_url.value().ToLink() : "");
   builder["authorId"] = (data.author_id.has_value() ? boost::uuids::to_string(data.author_id.value()) : "");
   builder["authorName"] = data.author_name;

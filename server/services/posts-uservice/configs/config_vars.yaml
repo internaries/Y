@@ -6,4 +6,4 @@ is_testing: false
 
 server-port: 8080
 
-dbconnection: 'change me'
+dbconnection: 'change-me'
