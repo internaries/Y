@@ -4,6 +4,7 @@
 #include <chrono>
 #include <optional>
 #include <string>
+#include <userver/formats/json/value_builder.hpp>
 #include <userver/storages/postgres/postgres_fwd.hpp>
 
 #include "utils/fields.hpp"
@@ -23,4 +24,6 @@ struct PaginationRequest {
   userver::storages::postgres::ResultSet GetPostsFromDb(const userver::storages::postgres::ClusterPtr& db,
                                                         const std::string& table, const std::string& search_id);
 };
+
+userver::formats::json::ValueBuilder PostsToPaginationJson(const userver::storages::postgres::ResultSet& db_posts);
 }  // namespace posts_uservice::models

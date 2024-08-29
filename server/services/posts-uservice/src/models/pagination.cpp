@@ -1,6 +1,7 @@
 #include "pagination.hpp"
 #include <userver/storages/postgres/cluster.hpp>
 #include <userver/storages/postgres/result_set.hpp>
+#include <userver/formats/serialize/common_containers.hpp>
 #include "models/post.hpp"
 
 namespace posts_uservice::models {
@@ -23,6 +24,18 @@ userver::storages::postgres::ResultSet PaginationRequest::GetPostsFromDb(
                                    models::kPostResponseFields, table, search_id),
                        user_id, size, page_token.value());
   }
+}
+
+userver::formats::json::ValueBuilder PostsToPaginationJson(const userver::storages::postgres::ResultSet& db_posts) {
+  auto posts = db_posts.AsSetOf<models::PostResponse>(userver::storages::postgres::kRowTag);
+
+  userver::formats::json::ValueBuilder response;
+  response["posts"] = posts;
+  if (!posts.IsEmpty()) {
+    response["nextPage"] = response["posts"][posts.Size() - 1]["createdAt"];
+  }
+
+  return response;
 }
 
 }  // namespace posts_uservice::models
