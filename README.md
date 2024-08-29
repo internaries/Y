@@ -13,8 +13,6 @@ Written on C++ using [userver](https://userver.tech/) framework, postgresql, red
 # Roadmap
 Here are some of the major upcoming features. You can view the complete roadmap with todos [here](https://github.com/orgs/internaries/projects/1). 
 
-
--  Add feeds
 -  Add creation support to S3 media
 -  Add redis cache for feeds
 -  Add authorization
