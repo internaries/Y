@@ -6,7 +6,9 @@ from utils.error_strings import VALIDATION_ERROR_START
 
 
 async def get_feed(service_client, user_id, size='', page=''):
-    return await service_client.get(f'api/v1/feed', headers={'System-Design-User-Id': user_id}, params={'size': size, 'page': page})
+    return await service_client.get(f'api/v1/feed',
+                                    headers={'System-Design-User-Id': user_id},
+                                    params={'size': size, 'page': page})
 
 
 def validate_posts(posts, expectedSize=10, expected_count=0):
@@ -15,7 +17,7 @@ def validate_posts(posts, expectedSize=10, expected_count=0):
     count = expected_count
 
     for post in posts:
-        newCount = int(posts[0]['text'])
+        newCount = int(posts[0]['description'])
 
         assert newCount - 1 == count
 
@@ -48,7 +50,7 @@ async def test_pagination(service_client):
 
     validate_posts(posts, 3)
 
-    lastCount = int(posts[len(posts) - 1]['text'])
+    lastCount = int(posts[len(posts) - 1]['description'])
 
     print(data['nextPage'])
     response = await get_feed(service_client, '12cea0f9-cde4-4ae8-8548-b7af307a9680', 3, data['nextPage'])
