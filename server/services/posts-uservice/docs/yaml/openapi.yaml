@@ -10,7 +10,7 @@ components:
       type: string
       pattern: '[A-Za-z0-9_\-]+'
     UserId:
-      description: Уникальный идентификатор пользователя
+      description: Уникальный идентификатор пользователя.
       type: string
       pattern: '[0-9a-f]+'
     ISOTimestamp:
@@ -185,7 +185,7 @@ paths:
           name: System-Design-User-Id
           required: true
           description: >
-            Идентификатор ползователя, который аутентифицирован в данном запросе.
+            Идентификатор пользователя, который аутентифицирован в данном запросе.
           schema:
             $ref: '#/components/schemas/UserId'
       responses:
@@ -195,15 +195,23 @@ paths:
           description: Некорректный запрос
   '/api/v1/subscriptions':
     get:
-      summary: Получение пользователей, на которых была произведена подписка
+      summary: Получение пользователей, на которых была произведена подписка.
       description: >
-        Получение списка идентификаторов пользователей, на которых была произведена подписка
+        Получение списка идентификаторов пользователей, на которых была произведена подписка.
       parameters:
         - in: header
           name: System-Design-User-Id
           required: true
           description: >
-            Идентификатор ползователя, который аутентифицирован в данном запросе.
+            Идентификатор пользователя, который аутентифицирован в данном запросе.
+          schema:
+            $ref: '#/components/schemas/UserId'
+        - in: path
+          name: userId
+          required: true
+          description: >
+            Идентификатор пользователя, для которого необходимо получить список пользователей,
+            на которых была оформлена подписка.
           schema:
             $ref: '#/components/schemas/UserId'
       responses:
@@ -232,7 +240,15 @@ paths:
           name: System-Design-User-Id
           required: true
           description: >
-            Идентификатор ползователя, который аутентифицирован в данном запросе.
+            Идентификатор пользователя, который аутентифицирован в данном запросе.
+          schema:
+            $ref: '#/components/schemas/UserId'
+        - in: path
+          name: userId
+          required: true
+          description: >
+            Идентификатор пользователя, для которого необходимо получить список пользователей,
+            которые подписались на него.
           schema:
             $ref: '#/components/schemas/UserId'
       responses:
@@ -266,7 +282,7 @@ paths:
           name: System-Design-User-Id
           required: true
           description: >
-            Идентификатор ползователя, который аутентифицирован в данном запросе.
+            Идентификатор пользователя, который аутентифицирован в данном запросе.
           schema:
             $ref: '#/components/schemas/UserId'
         - in: query
