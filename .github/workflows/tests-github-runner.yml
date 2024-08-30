@@ -8,14 +8,10 @@ on:
 
 jobs:
   test-posts-uservice:
-
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
-    - name: go to posts-uservice
-      run: cd server/services/posts-uservice
-    - name: show contents of folder
-      run: ls
     - name: Run tests via docker
+      working-directory: ./server/services/posts-uservice
       run: make docker-test-debug
