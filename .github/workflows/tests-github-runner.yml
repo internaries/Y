@@ -12,10 +12,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Alias docker-compose to docker compose
-      run: alias docker-compose='docker compose'
     - name: Print docker-compose version
-      run: docker-compose --version
+      run: alias docker-compose='docker compose' && docker-compose --version
     - name: Run tests via docker
       working-directory: ./server/services/posts-uservice
       run: make docker-test-debug
