@@ -14,7 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: go to posts-uservice
-      run: cd ./server/services/posts-uservice
+      run: cd server/services/posts-uservice
     - name: show contents of folder
       run: ls
     - name: Run tests via docker
