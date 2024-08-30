@@ -8,12 +8,12 @@ on:
 
 jobs:
   test-posts-uservice:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
     - uses: actions/checkout@v4
     - name: Print docker-compose version
-      run: alias docker-compose='docker compose' && docker-compose --version
+      run: docker-compose --version
     - name: Run tests via docker
       working-directory: ./server/services/posts-uservice
       run: make docker-test-debug
