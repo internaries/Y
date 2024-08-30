@@ -1,0 +1,19 @@
+name: Tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test-posts-uservice:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: go to posts-uservice
+      run: cd ./server/services/posts-uservice
+    - name: Run tests via docker
+      run: make docker-test-debug
