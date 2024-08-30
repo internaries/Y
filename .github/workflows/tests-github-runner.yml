@@ -12,6 +12,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Print docker-compose version
+      run: docker-compose --version
     - name: Run tests via docker
       working-directory: ./server/services/posts-uservice
       run: make docker-test-debug
