@@ -80,9 +80,9 @@ class CreatePost final : public userver::server::handlers::HttpHandlerBase {
 
   std::string HandleRequestThrow(const userver::server::http::HttpRequest& request,
                                  userver::server::request::RequestContext&) const override {
-    const auto& user_id_argmunet = request.GetHeader("System-Design-User-Id");
+    const auto& user_id_argument = request.GetHeader("System-Design-User-Id");
     // should throw 401
-    auto author_id = utils::ParseUUIDArgument(user_id_argmunet);
+    auto author_id = utils::ParseUUIDArgument(user_id_argument);
 
     const auto& description = FormatText(request.GetArg("description"));
     const auto& media = request.GetArg("media");
