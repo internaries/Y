@@ -36,13 +36,7 @@ class GetFeed final : public userver::server::handlers::HttpHandlerBase {
     models::PaginationRequest pagination_request(user_id_argument, size_argument, page_argument);
     auto res = pagination_request.GetPostsFromDb(pg_cluster_, "feed", "owner_id");
 
-    auto posts = res.AsSetOf<models::PostResponse>(userver::storages::postgres::kRowTag);
-
-    userver::formats::json::ValueBuilder response;
-    response["posts"] = posts;
-    if (!posts.IsEmpty()) {
-      response["nextPage"] = response["posts"][posts.Size() - 1]["createdAt"];
-    }
+    auto response = models::PostsToPaginationJson(res);
     return userver::formats::json::ToPrettyString(response.ExtractValue());
   }
 
