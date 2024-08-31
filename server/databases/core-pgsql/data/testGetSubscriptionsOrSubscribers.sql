@@ -2,7 +2,8 @@ INSERT INTO users(id, name, login, password)
 VALUES ('c25a7e41-8a27-48ca-bbaf-dc27a000b9ba', 'user1', 'user1', 'pass'),
        ('1e755517-eea9-414a-acb1-7a84600898bd', 'user2', 'user2', 'pass'),
        ('267d54d2-8956-4045-9885-1bf238fc90ce', 'user3', 'user3', 'pass'),
-       ('eacea82c-b498-4545-8db2-04895f194962', 'user4', 'user4', 'pass')
+       ('eacea82c-b498-4545-8db2-04895f194962', 'user4', 'user4', 'pass'),
+       ('ab573c05-d6c8-4924-aa1a-3f2fd1cea121', 'user5', 'user5', 'pass')
 ON CONFLICT DO NOTHING;
 
 INSERT INTO follows(folowee_id, folower_id) 
