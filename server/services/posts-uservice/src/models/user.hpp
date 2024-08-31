@@ -10,10 +10,10 @@
 namespace posts_uservice::models {
 
 struct UserResponse {
-    boost::uuids::uuid id;
+  boost::uuids::uuid id;
 };
 
 userver::formats::json::Value Serialize(const UserResponse& data,
                                         userver::formats::serialize::To<userver::formats::json::Value>);
 
-} // namespace posts_uservice::models
+}  // namespace posts_uservice::models
