@@ -8,6 +8,7 @@
 #include <userver/server/handlers/http_handler_base.hpp>
 
 #include "models/user.hpp"
+#include "utils/errors.hpp"
 #include "utils/fields.hpp"
 #include "userver/storages/secdist/exceptions.hpp"
 
@@ -40,6 +41,14 @@ class GetSubscriptions final : public userver::server::handlers::HttpHandlerBase
 
     const auto user_authorized_id = utils::ParseUUIDArgument(user_id_argument);
     const auto user_id = utils::ParseUUIDArgument(user_id_argument);
+
+    auto user_exists = pg_cluster_->Execute(
+      userver::storages::postgres::ClusterHostType::kMaster,
+      "SELECT name FROM users WHERE id = $1", user_id);
+
+    if(user_exists.IsEmpty()) {
+      throw errors::NotFoundException("user", "User with this id not found");
+    }
 
     auto res = pg_cluster_->Execute(
       userver::storages::postgres::ClusterHostType::kMaster,
