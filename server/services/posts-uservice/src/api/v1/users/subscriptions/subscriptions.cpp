@@ -29,7 +29,12 @@ class GetSubscriptions final : public userver::server::handlers::HttpHandlerBase
 
   std::string HandleRequestThrow(const userver::server::http::HttpRequest& request,
                                  userver::server::request::RequestContext&) const override {
-    const std::string& user_id_argument = request.GetHeader("System-Design-User-Id");
+    // can be useful for hide subscriptions for someone
+    const std::string& user_authorized_id_argument = request.GetHeader("System-Design-User-Id");
+    const std::string& user_id_argument = request.GetPathArg("userId");
+
+    auto user_authorized_id = utils::ParseUUIDArgument(user_id_argument);
+    auto user_id = utils::ParseUUIDArgument(user_id_argument);
     
     return "something";
   }

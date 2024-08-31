@@ -29,10 +29,11 @@ class GetSubscribers final : public userver::server::handlers::HttpHandlerBase {
 
   std::string HandleRequestThrow(const userver::server::http::HttpRequest& request,
                                  userver::server::request::RequestContext&) const override {
-    const std::string& user_id_argument = request.GetHeader("System-Design-User-Id");
+    // can be useful for hide subscribers for someone
+    const std::string& user_authorized_id_argument = request.GetHeader("System-Design-User-Id");
+    const std::string& user_id_argument = request.GetPathArg("userId");
 
     return "anything";
-
   }
 
  private:

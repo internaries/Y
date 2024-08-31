@@ -11,8 +11,8 @@
 #include "api/v1/posts/create_post.hpp"
 #include "api/v1/posts/get_post.hpp"
 #include "api/v1/users/posts/last_posts.hpp"
-#include "api/v1/subscribers/subscribers.hpp"
-#include "api/v1/subscriptions/subscriptions.hpp"
+#include "api/v1/users/subscribers/subscribers.hpp"
+#include "api/v1/users/subscriptions/subscriptions.hpp"
 
 int main(int argc, char* argv[]) {
   auto component_list = userver::components::MinimalServerComponentList()

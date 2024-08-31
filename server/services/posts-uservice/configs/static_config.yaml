@@ -75,12 +75,12 @@ components_manager:
             task_processor: main-task-processor
 
         handler-get-subscribers:
-            path: /api/v1/subscribers
+            path: /api/v1/users/subscribers
             method: GET
             task_processor: main-task-processor
         
         handler-get-subscriptions:
-            path: /api/v1/subscriptions
+            path: /api/v1/users/subscriptions
             method: GET
             task_processor: main-task-processor
 
