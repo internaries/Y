@@ -45,6 +45,8 @@ add_library(${PROJECT_NAME}_objs OBJECT
     src/models/post.cpp
     src/models/pagination.hpp
     src/models/pagination.cpp
+    src/models/user.hpp
+    src/models/user.cpp
     src/utils/fields.hpp
     src/utils/fields.cpp
 )
