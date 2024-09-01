@@ -39,7 +39,7 @@ class GetSubscribers final : public userver::server::handlers::HttpHandlerBase {
     const std::string& user_authorized_id_argument = request.GetHeader("System-Design-User-Id");
     const std::string& user_id_argument = request.GetPathArg("userId");
 
-    const auto user_authorized_id = utils::ParseUUIDArgument(user_id_argument);
+    const auto user_authorized_id = utils::ParseUUIDArgument(user_authorized_id_argument);
     const auto user_id = utils::ParseUUIDArgument(user_id_argument);
 
     auto user_exists = pg_cluster_->Execute(userver::storages::postgres::ClusterHostType::kMaster,
