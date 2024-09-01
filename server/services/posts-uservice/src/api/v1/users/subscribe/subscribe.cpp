@@ -19,6 +19,11 @@
 #include <userver/storages/postgres/postgres_fwd.hpp>
 
 namespace posts_uservice {
+bool Is_user_exists(const boost::uuids::uuid& user_id,const userver::storages::postgres::ClusterPtr& pg_cluster_) {
+  auto user_exists = pg_cluster_->Execute(userver::storages::postgres::ClusterHostType::kMaster,
+                                        "SELECT name FROM users WHERE id = $1", user_id);
+  return !user_exists.IsEmpty();
+}
 
 namespace {
 
@@ -45,10 +50,10 @@ class Subscribe final : public userver::server::handlers::HttpHandlerBase {
     if(user_authorized_id == user_id) {
       throw errors::ValidationException("user","Can not subcribe to yourself");
     }
-    auto user_exists = pg_cluster_->Execute(userver::storages::postgres::ClusterHostType::kMaster,
-                                            "SELECT name FROM users WHERE id = $1", user_id);
-
-    if (user_exists.IsEmpty()) {
+    if(!Is_user_exists(user_authorized_id,pg_cluster_)) {
+      throw errors::NotFoundException("user", "User with this id not found");
+    }
+    if(!Is_user_exists(user_id,pg_cluster_)) {
       throw errors::NotFoundException("user", "User with this id not found");
     }
 
