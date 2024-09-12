@@ -31,7 +31,7 @@ jobs:
 
       - name: Setup ccache
         working-directory: ./server/services/posts-uservice
-        run: docker-compose run --rm service_template-container bash -c 'ccache -M 2.0GB && ccache -s'
+        run: docker-compose run --rm posts_uservice-container bash -c 'ccache -M 2.0GB && ccache -s'
 
       - name: Cmake
         working-directory: ./server/services/posts-uservice
