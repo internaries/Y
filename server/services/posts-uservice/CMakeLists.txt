@@ -12,7 +12,6 @@ if(NOT userver_FOUND)  # Fallback to subdirectory usage
     set(USERVER_FEATURE_REDIS_HI_MALLOC ON CACHE BOOL "" FORCE)
     set(USERVER_FEATURE_STACKTRACE OFF CACHE BOOL "" FORCE)
     set(USERVER_FEATURE_PATCH_LIBPQ OFF CACHE BOOL "" FORCE)
-    set(USERVER_POSTGRES_ENABLE_LEGACY_TIMESTAMP ON CACHE BOOL "" FORCE)
 
 
     if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/userver)
@@ -22,6 +21,8 @@ if(NOT userver_FOUND)  # Fallback to subdirectory usage
         message(FATAL_ERROR "Either install the userver or provide a path to it")
     endif()
 endif()
+
+set(USERVER_POSTGRES_ENABLE_LEGACY_TIMESTAMP ON CACHE BOOL "" FORCE)
 
 userver_setup_environment()
 
