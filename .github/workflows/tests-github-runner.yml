@@ -20,8 +20,7 @@ jobs:
       - name: Reuse ccache directory
         uses: actions/cache@v4
         with:
-          working-directory: ./server/services/posts-uservice
-          path: .ccache
+          path: ./server/services/posts-uservice/.ccache
           key: "ccache-dir-${{github.ref}}_run-${{github.run_number}}"
           restore-keys: |
             ccache-dir-${{github.ref}}_run-
