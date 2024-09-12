@@ -1,6 +1,8 @@
 name: Tests
+run-name: ${{github.event.head_commit_message}}
 
 on:
+  workflow_dispatch:
   push:
     branches: ["main"]
   pull_request:
