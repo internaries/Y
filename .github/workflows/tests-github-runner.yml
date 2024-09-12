@@ -30,17 +30,17 @@ jobs:
           sudo apt install --allow-downgrades -y docker-compose
 
       - name: Setup ccache
-        working-directory: ./server/services/post-uservice
+        working-directory: ./server/services/posts-uservice
         run: docker-compose run --rm service_template-container bash -c 'ccache -M 2.0GB && ccache -s'
 
       - name: Cmake
-        working-directory: ./server/services/post-uservice
+        working-directory: ./server/services/posts-uservice
         run: make docker-cmake-release
 
       - name: Build
-        working-directory: ./server/services/post-uservice
+        working-directory: ./server/services/posts-uservice
         run: make docker-build-release
 
       - name: Run tests
-        working-directory: ./server/services/post-uservice
+        working-directory: ./server/services/posts-uservice
         run: make docker-test-release
