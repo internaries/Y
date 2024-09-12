@@ -12,8 +12,34 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Print docker-compose version
-        run: docker compose --version
-      - name: Run tests via docker
-        working-directory: ./server/services/posts-uservice
-        run: make docker-test-debug DOCKER_COMPOSE="docker compose"
+        with:
+          submodules: true
+
+      - name: Reuse ccache directory
+        uses: actions/cache@v4
+        with:
+          path: .ccache
+          key: "ccache-dir-${{github.ref}}_run-${{github.run_number}}"
+          restore-keys: |
+            ccache-dir-${{github.ref}}_run-
+            ccache-
+
+      - name: Install docker-compose
+        run: |
+          sudo apt update
+          sudo apt install --allow-downgrades -y docker-compose
+
+      - name: Setup ccache
+        run: docker-compose run --rm service_template-container bash -c 'ccache -M 2.0GB && ccache -s'
+
+      - name: Cmake
+        working-directory: ./server/services/post-uservice
+        run: make docker-cmake-release
+
+      - name: Build
+        working-directory: ./server/services/post-uservice
+        run: make docker-build-release
+
+      - name: Run tests
+        working-directory: ./server/services/post-uservice
+        run: make docker-test-release
