@@ -1,4 +1,4 @@
-#include "subscriptions.hpp"
+#include "subscribe.hpp"
 
 #include <fmt/format.h>
 #include <boost/uuid/uuid.hpp>
@@ -19,15 +19,20 @@
 #include <userver/storages/postgres/postgres_fwd.hpp>
 
 namespace posts_uservice {
+bool Is_user_exists(const boost::uuids::uuid& user_id,const userver::storages::postgres::ClusterPtr& pg_cluster_) {
+  auto user_exists = pg_cluster_->Execute(userver::storages::postgres::ClusterHostType::kMaster,
+                                        "SELECT name FROM users WHERE id = $1", user_id);
+  return !user_exists.IsEmpty();
+}
 
 namespace {
 
-class GetSubscriptions final : public userver::server::handlers::HttpHandlerBase {
+class Subscribe final : public userver::server::handlers::HttpHandlerBase {
  public:
-  static constexpr std::string_view kName = "handler-get-subscriptions";
+  static constexpr std::string_view kName = "handler-create-subscribe";
 
-  GetSubscriptions(const userver::components::ComponentConfig& config,
-                   const userver::components::ComponentContext& context)
+  Subscribe(const userver::components::ComponentConfig& config,
+                 const userver::components::ComponentContext& context)
       : HttpHandlerBase(config, context),
         pg_cluster_(context.FindComponent<userver::components::Postgres>("postgres-db-1").GetCluster()) {}
 
@@ -42,22 +47,29 @@ class GetSubscriptions final : public userver::server::handlers::HttpHandlerBase
     const auto user_authorized_id = utils::ParseUUIDArgument(user_authorized_id_argument);
     const auto user_id = utils::ParseUUIDArgument(user_id_argument);
 
-    auto user_exists = pg_cluster_->Execute(userver::storages::postgres::ClusterHostType::kMaster,
-                                            "SELECT name FROM users WHERE id = $1", user_id);
-
-    if (user_exists.IsEmpty()) {
+    if(user_authorized_id == user_id) {
+      throw errors::ValidationException("user","Can not subcribe to yourself");
+    }
+    if(!Is_user_exists(user_authorized_id,pg_cluster_)) {
+      throw errors::NotFoundException("user", "User with this id not found");
+    }
+    if(!Is_user_exists(user_id,pg_cluster_)) {
       throw errors::NotFoundException("user", "User with this id not found");
     }
 
     auto res = pg_cluster_->Execute(userver::storages::postgres::ClusterHostType::kMaster,
-                                    "SELECT folowee_id FROM follows WHERE folower_id = $1", user_id);
+                                    "SELECT folowee_id,folower_id FROM follows WHERE folowee_id = $1 AND folower_id = $2",
+                                    user_id,user_authorized_id);
 
-    auto users = res.AsSetOf<models::UserResponse>(userver::storages::postgres::kRowTag);
+    if(!res.IsEmpty()) {
+      return "Already subscribed";
+    }
 
-    userver::formats::json::ValueBuilder response;
-    response["users"] = users;
+    res = pg_cluster_->Execute(userver::storages::postgres::ClusterHostType::kMaster,
+                                "INSERT INTO follows(folowee_id,folower_id) VALUES($1,$2)",
+                                user_id,user_authorized_id);
 
-    return userver::formats::json::ToPrettyString(response.ExtractValue());
+    return "Subcribed";
   }
 
  private:
@@ -66,8 +78,8 @@ class GetSubscriptions final : public userver::server::handlers::HttpHandlerBase
 
 }  // namespace
 
-void AppendGetSubscriptions(userver::components::ComponentList& component_list) {
-  component_list.Append<GetSubscriptions>();
+void AppendSubscribe(userver::components::ComponentList& component_list) {
+  component_list.Append<Subscribe>();
 }
 
 }  // namespace posts_uservice

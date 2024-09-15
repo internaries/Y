@@ -1,3 +1,4 @@
+#include <api/v1/users/subscribe/subscribe.hpp>
 #include <userver/clients/dns/component.hpp>
 #include <userver/clients/http/component.hpp>
 #include <userver/components/minimal_server_component_list.hpp>
@@ -13,6 +14,7 @@
 #include "api/v1/users/posts/last_posts.hpp"
 #include "api/v1/users/subscribers/subscribers.hpp"
 #include "api/v1/users/subscriptions/subscriptions.hpp"
+#include "api/v1/users/subscribe/subscribe.hpp"
 
 int main(int argc, char* argv[]) {
   auto component_list = userver::components::MinimalServerComponentList()
@@ -29,6 +31,7 @@ int main(int argc, char* argv[]) {
   posts_uservice::AppendGetFeed(component_list);
   posts_uservice::AppendGetSubscribers(component_list);
   posts_uservice::AppendGetSubscriptions(component_list);
+  posts_uservice::AppendSubscribe(component_list);
 
   return userver::utils::DaemonMain(argc, argv, component_list);
 }
