@@ -1,0 +1,48 @@
+name: Tests
+run-name: ${{github.event.head_commit_message}}
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  test-posts-uservice:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Reuse ccache directory
+        uses: actions/cache@v4
+        with:
+          path: ./server/services/posts-uservice/.ccache
+          key: "ccache-dir-${{github.ref}}_run-${{github.run_number}}"
+          restore-keys: |
+            ccache-dir-${{github.ref}}_run-
+            ccache-
+
+      - name: Install docker-compose
+        run: |
+          sudo apt update
+          sudo apt install --allow-downgrades -y docker-compose
+
+      - name: Setup ccache
+        working-directory: ./server/services/posts-uservice
+        run: docker-compose run --rm posts_uservice-container bash -c 'ccache -M 2.0GB && ccache -s'
+
+      - name: Cmake
+        working-directory: ./server/services/posts-uservice
+        run: make docker-cmake-release
+
+      - name: Build
+        working-directory: ./server/services/posts-uservice
+        run: make docker-build-release
+
+      - name: Run tests
+        working-directory: ./server/services/posts-uservice
+        run: make docker-test-release

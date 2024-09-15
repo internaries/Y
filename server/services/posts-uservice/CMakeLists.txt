@@ -22,6 +22,9 @@ if(NOT userver_FOUND)  # Fallback to subdirectory usage
     endif()
 endif()
 
+add_compile_definitions(USERVER_POSTGRES_ENABLE_LEGACY_TIMESTAMP=1)
+
+
 userver_setup_environment()
 
 
